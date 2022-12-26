@@ -1,12 +1,11 @@
 # go-ravelry
 
 ![Coverage](https://img.shields.io/badge/Coverage-95.1%25-brightgreen)
-[![Go Reference](https://pkg.go.dev/badge/github.com/CamiloGarciaLaRotta/go-ravelry.svg)](https://pkg.go.dev/github.com/CamiloGarciaLaRotta/go-ravelry)
+[![Go Reference](https://pkg.go.dev/badge/github.com/CamiloGarciaLaRotta/go-ravelry.svg)](https://pkg.go.dev/github.com/CamiloGarciaLaRotta/go-ravelry@v0.1.0/ravelry)
 
 Unofficial Go SDK for the [Ravelry API](https://www.ravelry.com/api)
 
 ### TL;DR
-For more information on how to use the API wrapper, see [the GoDocs](https://pkg.go.dev/github.com/CamiloGarciaLaRotta/go-ravelry).
 
 ```go
 package main
