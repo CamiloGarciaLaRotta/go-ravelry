@@ -1,3 +1,8 @@
+// This package provides the constructors needed to setup the [Ravelry API] client.
+// It allows instantiation of the network layer (api) and the authentication layer (auth).
+// Both of which are required for the client to be spun up.
+//
+// [Ravelry API]: https://www.ravelry.com/api
 package ravelry
 
 import (
@@ -20,23 +25,23 @@ func New(api api.API, auth auth.Auth) *Client {
 	}
 }
 
-// New creates the auth layer for the Ravelry client.
-// It takes directly the user and password.
-func NewAuth(u, p string) *auth.BasicAuth {
-	return auth.New(u, p)
-}
-
-// NewFromEnv creates the auth layer for the Ravelry client.
-// It extracts the user and password from ENV:
-// user: $RAVELRY_USER
-// pass: $RAVELRY_PWD
-func NewAuthFromEnv() (*auth.BasicAuth, error) {
-	return auth.NewFromEnv()
-}
-
 // NewAPI creates the network layer for the Ravelry client.
 // It will authenticate to either the default Ravelry API or to an optional alternative domain.
 // This alternative domain is useful for tests and local development.
 func NewAPI(a auth.Auth, alternativeDomain string) *api.Api {
 	return api.New(a, alternativeDomain)
+}
+
+// NewBasicAuth creates the auth layer for the Ravelry client.
+// It takes directly the user and password.
+func NewBasicAuth(u, p string) *auth.BasicAuth {
+	return auth.NewBasicAuth(u, p)
+}
+
+// NewBasicAuthFromEnv creates the auth layer for the Ravelry client.
+// It extracts the user and password from ENV:
+//   - user: $RAVELRY_USER.
+//   - pass: $RAVELRY_PWD.
+func NewBasicAuthFromEnv() (*auth.BasicAuth, error) {
+	return auth.NewBasicAuthFromEnv()
 }

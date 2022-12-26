@@ -32,6 +32,9 @@ jobs:
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
+        env:
+          RAVELRY_USER: ${{ secrets.RAVELRY_USER }}
+          RAVELRY_PWD: ${{ secrets.RAVELRY_PWD }}
 
       - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
         uses: tj-actions/coverage-badge-go@v2
@@ -56,6 +59,6 @@ jobs:
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ github.token }}
+          github_token: ${{ secrets.PAT }}
           branch: ${{ github.head_ref }}
 

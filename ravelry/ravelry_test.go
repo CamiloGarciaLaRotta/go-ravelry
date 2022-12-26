@@ -12,7 +12,7 @@ import (
 
 func TestNew(t *testing.T) {
 	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
-	auth := ravelry.NewAuth("foo", "bar")
+	auth := ravelry.NewBasicAuth("foo", "bar")
 
 	ravelry := ravelry.New(api, auth)
 	require.NotNil(t, ravelry)
@@ -23,16 +23,42 @@ func TestNewAPI(t *testing.T) {
 	require.NotNil(t, api)
 }
 
-func TestNewAuth(t *testing.T) {
-	a := ravelry.NewAuth("foo", "bar")
+func TestNewBasicAuth(t *testing.T) {
+	a := ravelry.NewBasicAuth("foo", "bar")
 	require.NotNil(t, a)
 }
 
-func TestNewAuthFromEnv(t *testing.T) {
+func TestNewBasicAuthFromEnv(t *testing.T) {
 	t.Setenv(auth.USER_ENV, "foo")
 	t.Setenv(auth.PWD_ENV, "bar")
 
-	a, err := ravelry.NewAuthFromEnv()
+	a, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
 	require.NotNil(t, a)
+}
+
+func TestReadOnlyEndpoint(t *testing.T) {
+	// we expect the ENV vars to be present in localhost and CI
+	auth, err := ravelry.NewBasicAuthFromEnv()
+	require.NoError(t, err)
+
+	api := ravelry.NewAPI(auth, "")
+	ravelry := ravelry.New(api, auth)
+
+	colors, err := ravelry.ColorFamilies()
+	require.NoError(t, err)
+	require.NotEmpty(t, colors)
+}
+
+func TestPersonalEndpoint(t *testing.T) {
+	// we expect the ENV vars to be present in localhost and CI
+	auth, err := ravelry.NewBasicAuthFromEnv()
+	require.NoError(t, err)
+
+	api := ravelry.NewAPI(auth, "")
+	ravelry := ravelry.New(api, auth)
+
+	colors, err := ravelry.CurrentUser()
+	require.NoError(t, err)
+	require.NotEmpty(t, colors)
 }

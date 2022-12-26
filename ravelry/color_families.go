@@ -7,8 +7,6 @@ import (
 	"github.com/CamiloGarciaLaRotta/go-ravelry/pkg/model"
 )
 
-// TODO add constants for all color families
-
 func (client *Client) ColorFamilies() ([]model.ColorFamily, error) {
 	data, err := client.Api.Get("color_families.json")
 	if err != nil {

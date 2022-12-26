@@ -1,3 +1,5 @@
+// This package provides the network layer for the Ravelry client.
+// It relies on the default http.Client and can be extended to perform additional HTTP methods.
 package api
 
 import (

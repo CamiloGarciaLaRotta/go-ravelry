@@ -23,3 +23,6 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+      env:
+        RAVELRY_USER: ${{ secrets.RAVELRY_USER }}
+        RAVELRY_PWD: ${{ secrets.RAVELRY_PWD }}
