@@ -7,6 +7,7 @@ import (
 
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/testingsupport"
+	"github.com/CamiloGarciaLaRotta/go-ravelry/pkg/model"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
 )
 
@@ -59,6 +60,19 @@ func TestPersonalEndpoint(t *testing.T) {
 	ravelry := ravelry.New(api, auth)
 
 	colors, err := ravelry.CurrentUser()
+	require.NoError(t, err)
+	require.NotEmpty(t, colors)
+}
+
+func TestURLParamEndpoint(t *testing.T) {
+	// we expect the ENV vars to be present in localhost and CI
+	auth, err := ravelry.NewBasicAuthFromEnv()
+	require.NoError(t, err)
+
+	api := ravelry.NewAPI(auth, "")
+	ravelry := ravelry.New(api, auth)
+
+	colors, err := ravelry.Search("foo", 1, []string{model.SearchTypeShop, model.SearchTypePatternAuthor})
 	require.NoError(t, err)
 	require.NotEmpty(t, colors)
 }

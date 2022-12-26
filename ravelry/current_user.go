@@ -8,7 +8,7 @@ import (
 )
 
 func (client *Client) CurrentUser() (*model.User, error) {
-	data, err := client.Api.Get("current_user.json")
+	data, err := client.Api.Get("current_user.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get current user: %w", err)
 	}

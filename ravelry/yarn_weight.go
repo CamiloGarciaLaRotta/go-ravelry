@@ -8,7 +8,7 @@ import (
 )
 
 func (client *Client) YarnWeights() ([]model.YarnWeight, error) {
-	data, err := client.Api.Get("yarn_weights.json")
+	data, err := client.Api.Get("yarn_weights.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get yarn weights: %w", err)
 	}
