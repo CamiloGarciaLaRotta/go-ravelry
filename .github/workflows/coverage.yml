@@ -32,6 +32,9 @@ jobs:
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
+        with:
+          ravelry_user: ${{ secrets.RAVELRY_USER }}
+          ravelry_pwd: ${{ secrets.RAVELRY_PWD }}
 
       - name: Go Coverage Badge  # Pass the `coverage.out` output to this action
         uses: tj-actions/coverage-badge-go@v2
