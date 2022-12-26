@@ -38,3 +38,55 @@ func main() {
 	fmt.Printf("%v\n", colors)
 }
 ```
+
+### Status
+
+- ✅ implemented
+- ❌ not yet implemented
+
+| API Endpoint                                                                                        | Status |
+| --------------------------------------------------------------------------------------------------- | ------ |
+| top level <ul><li>color_families</li><li>current_user</li><li>search</li><li>yarn_weights</li></ul> | ✅     |
+| app                                                                                                 | ❌     |
+| bundled_items                                                                                       | ❌     |
+| bundles                                                                                             | ❌     |
+| carts                                                                                               | ❌     |
+| comments                                                                                            | ❌     |
+| deliveries                                                                                          | ❌     |
+| designers                                                                                           | ❌     |
+| extras                                                                                              | ❌     |
+| favorites                                                                                           | ❌     |
+| fiber                                                                                               | ❌     |
+| fiber_attribute_groups                                                                              | ❌     |
+| fiber_attributes                                                                                    | ❌     |
+| fiber_categories                                                                                    | ❌     |
+| forum_posts                                                                                         | ❌     |
+| forums                                                                                              | ❌     |
+| friends                                                                                             | ❌     |
+| groups                                                                                              | ❌     |
+| in_store_sales                                                                                      | ❌     |
+| library                                                                                             | ❌     |
+| messages                                                                                            | ❌     |
+| needles                                                                                             | ❌     |
+| packs                                                                                               | ❌     |
+| pages                                                                                               | ❌     |
+| pattern_attributes                                                                                  | ❌     |
+| pattern_categories                                                                                  | ❌     |
+| pattern_sources                                                                                     | ❌     |
+| patterns                                                                                            | ❌     |
+| people                                                                                              | ❌     |
+| photos                                                                                              | ❌     |
+| product_attachments                                                                                 | ❌     |
+| products                                                                                            | ❌     |
+| projects                                                                                            | ❌     |
+| queue                                                                                               | ❌     |
+| saved_searches                                                                                      | ❌     |
+| shops                                                                                               | ❌     |
+| stash                                                                                               | ❌     |
+| stores                                                                                              | ❌     |
+| topics                                                                                              | ❌     |
+| upload                                                                                              | ❌     |
+| volumes                                                                                             | ❌     |
+| yarn_attributes                                                                                     | ❌     |
+| yarn_companies                                                                                      | ❌     |
+| yarns                                                                                               | ❌     |
