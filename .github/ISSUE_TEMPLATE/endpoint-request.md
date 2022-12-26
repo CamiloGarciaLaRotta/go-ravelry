@@ -1,5 +1,5 @@
 ---
-name: Endpont Request
+name: Endpoint Request
 about: Request a new Ravelry endpoint to be supported
 title: ''
 labels: enhancement
