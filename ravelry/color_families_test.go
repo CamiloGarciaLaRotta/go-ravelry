@@ -22,7 +22,7 @@ type fakeApi struct {
 
 func (api *fakeApi) Get(url string) ([]byte, error) {
 	if api.fail {
-		return nil, errors.New("boom")
+		return nil, errors.New("booom")
 	}
 	return api.fakeResp, nil
 }
