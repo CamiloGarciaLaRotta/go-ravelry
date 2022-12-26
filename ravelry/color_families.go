@@ -8,7 +8,7 @@ import (
 )
 
 func (client *Client) ColorFamilies() ([]model.ColorFamily, error) {
-	data, err := client.Api.Get("color_families.json")
+	data, err := client.Api.Get("color_families.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get color families: %w", err)
 	}

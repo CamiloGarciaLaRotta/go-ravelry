@@ -21,7 +21,7 @@ type FakeApi struct {
 }
 
 // Get is a mock implementation for tests.
-func (api *FakeApi) Get(url string) ([]byte, error) {
+func (api *FakeApi) Get(url string, params map[string]string) ([]byte, error) {
 	if api.Fail {
 		return nil, errors.New("booom")
 	}

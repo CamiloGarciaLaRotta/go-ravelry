@@ -15,7 +15,7 @@ const RAVELRY_DOMAIN = "https://api.ravelry.com"
 // API defines all the HTTP methods needed to interact with the Ravelry API.
 // Defining the interface allows us to mock the network layer in tests.
 type API interface {
-	Get(url string) ([]byte, error)
+	Get(url string, params map[string]string) ([]byte, error)
 }
 
 type Api struct {
@@ -36,12 +36,14 @@ func New(a auth.Auth, alternativeDomain string) *Api {
 }
 
 // Get performs a GET request with a default HTTP client and returns the response body.
-func (api *Api) Get(endpoint string) ([]byte, error) {
+func (api *Api) Get(endpoint string, params map[string]string) ([]byte, error) {
 	url := fmt.Sprintf("%s/%s", api.domain, endpoint)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create GET request: %w", err)
 	}
+
+	addQueryParams(req, params)
 
 	api.auth.SetAuth(req)
 	req.Header.Set("Content-Type", "application/json")
@@ -62,4 +64,14 @@ func (api *Api) Get(endpoint string) ([]byte, error) {
 	}
 
 	return data, nil
+}
+
+func addQueryParams(r *http.Request, params map[string]string) {
+	q := r.URL.Query()
+
+	for k, v := range params {
+		q.Add(k, v)
+	}
+
+	r.URL.RawQuery = q.Encode()
 }
