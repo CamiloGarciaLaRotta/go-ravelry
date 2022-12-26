@@ -10,7 +10,7 @@ func Example() {
 	// import "github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
 
 	// 1. setup the auth layer
-	auth, err := ravelry.NewAuthFromEnv()
+	auth, err := ravelry.NewBasicAuthFromEnv()
 	if err != nil {
 		panic(err)
 	}

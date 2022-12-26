@@ -1,3 +1,9 @@
+// This package defines the means by which a user can [authenticate] with the Ravelry API.
+//
+// Ravelry supports Basic-Auth and Oauth.
+// We currently only support Basic-Auth (read-only and personal).
+//
+// [authenticate]: https://www.ravelry.com/api#authenticating
 package auth
 
 import (
@@ -21,6 +27,9 @@ type Auth interface {
 	SetAuth(req *http.Request)
 }
 
+// BasicAuth auth method as described in
+// https://www.ravelry.com/api#authenticating.
+// It can be used to access read-only and personal endpoints.
 type BasicAuth struct {
 	user, pass string
 }
@@ -30,15 +39,15 @@ func (auth *BasicAuth) SetAuth(req *http.Request) {
 	req.SetBasicAuth(auth.user, auth.pass)
 }
 
-// New takes directly the user and password
-func New(u, p string) *BasicAuth {
+// NewBasicAuth takes directly the user and password
+func NewBasicAuth(u, p string) *BasicAuth {
 	return &BasicAuth{user: u, pass: p}
 }
 
-// NewFromEnv extracts the user and password from ENV
-// user: $RAVELRY_USER
-// pass: $RAVELRY_PWD
-func NewFromEnv() (*BasicAuth, error) {
+// NewBasicAuthFromEnv extracts the user and password from ENV:
+//   - user: $RAVELRY_USER.
+//   - pass: $RAVELRY_PWD.
+func NewBasicAuthFromEnv() (*BasicAuth, error) {
 	u := os.Getenv(USER_ENV)
 	if u == "" {
 		return nil, errors.New("$RAVELRY_USER is not defined")

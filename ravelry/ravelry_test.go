@@ -12,7 +12,7 @@ import (
 
 func TestNew(t *testing.T) {
 	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
-	auth := ravelry.NewAuth("foo", "bar")
+	auth := ravelry.NewBasicAuth("foo", "bar")
 
 	ravelry := ravelry.New(api, auth)
 	require.NotNil(t, ravelry)
@@ -24,7 +24,7 @@ func TestNewAPI(t *testing.T) {
 }
 
 func TestNewAuth(t *testing.T) {
-	a := ravelry.NewAuth("foo", "bar")
+	a := ravelry.NewBasicAuth("foo", "bar")
 	require.NotNil(t, a)
 }
 
@@ -32,7 +32,7 @@ func TestNewAuthFromEnv(t *testing.T) {
 	t.Setenv(auth.USER_ENV, "foo")
 	t.Setenv(auth.PWD_ENV, "bar")
 
-	a, err := ravelry.NewAuthFromEnv()
+	a, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
 	require.NotNil(t, a)
 }
