@@ -6,6 +6,7 @@
 Unofficial Go SDK for the [Ravelry API](https://www.ravelry.com/api)
 
 ### TL;DR
+For more information on how to use the API wrapper, see [the GoDocs](https://pkg.go.dev/github.com/CamiloGarciaLaRotta/go-ravelry).
 
 ```go
 package main
