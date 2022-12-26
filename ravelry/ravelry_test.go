@@ -3,10 +3,11 @@ package ravelry_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/testingsupport"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
-	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
