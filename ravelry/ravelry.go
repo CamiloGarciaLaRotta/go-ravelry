@@ -19,3 +19,24 @@ func New(api api.API, auth auth.Auth) *Client {
 		Auth: auth,
 	}
 }
+
+// New creates the auth layer for the Ravelry client.
+// It takes directly the user and password.
+func NewAuth(u, p string) *auth.BasicAuth {
+	return auth.New(u, p)
+}
+
+// NewFromEnv creates the auth layer for the Ravelry client.
+// It extracts the user and password from ENV:
+// user: $RAVELRY_USER
+// pass: $RAVELRY_PWD
+func NewAuthFromEnv() (*auth.BasicAuth, error) {
+	return auth.NewFromEnv()
+}
+
+// NewAPI creates the network layer for the Ravelry client.
+// It will authenticate to either the default Ravelry API or to an optional alternative domain.
+// This alternative domain is useful for tests and local development.
+func NewAPI(a auth.Auth, alternativeDomain string) *api.Api {
+	return api.New(a, alternativeDomain)
+}
