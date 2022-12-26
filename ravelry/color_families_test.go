@@ -1,36 +1,19 @@
 package ravelry_test
 
 import (
-	"errors"
-	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/testingsupport"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/pkg/model"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
 )
 
-type fakeAuth struct{}
-
-func (auth *fakeAuth) SetAuth(_ *http.Request) {}
-
-type fakeApi struct {
-	fail     bool
-	fakeResp []byte
-}
-
-func (api *fakeApi) Get(url string) ([]byte, error) {
-	if api.fail {
-		return nil, errors.New("booom")
-	}
-	return api.fakeResp, nil
-}
-
 func TestColorFamilies_NetworkError(t *testing.T) {
-	fakeAuth := fakeAuth{}
-	fakeApi := fakeApi{
-		fail: true,
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
+		Fail: true,
 	}
 	ravelry := ravelry.New(&fakeApi, &fakeAuth)
 
@@ -41,10 +24,10 @@ func TestColorFamilies_NetworkError(t *testing.T) {
 }
 
 func TestColorFamilies_UnmarshalError(t *testing.T) {
-	fakeAuth := fakeAuth{}
-	fakeApi := fakeApi{
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
 		// we return an unexpected empty response
-		fakeResp: []byte(""),
+		FakeResp: []byte(""),
 	}
 	ravelry := ravelry.New(&fakeApi, &fakeAuth)
 
@@ -55,10 +38,9 @@ func TestColorFamilies_UnmarshalError(t *testing.T) {
 }
 
 func TestColorFamilies(t *testing.T) {
-	fakeAuth := fakeAuth{}
-	fakeApi := fakeApi{
-		// we return an unexpected empty response
-		fakeResp: []byte(`{
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
+		FakeResp: []byte(`{
 			"color_families": [
 				{
 					"color": null,

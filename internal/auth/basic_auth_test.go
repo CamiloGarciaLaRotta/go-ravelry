@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 	"github.com/stretchr/testify/require"
+
+	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 )
 
 func TestNewFromEnv_Errors(t *testing.T) {

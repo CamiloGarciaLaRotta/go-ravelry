@@ -3,13 +3,15 @@ package ravelry_test
 import (
 	"testing"
 
-	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
-	"github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
 	"github.com/stretchr/testify/require"
+
+	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
+	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/testingsupport"
+	"github.com/CamiloGarciaLaRotta/go-ravelry/ravelry"
 )
 
 func TestNew(t *testing.T) {
-	api := ravelry.NewAPI(&fakeAuth{}, "")
+	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
 	auth := ravelry.NewAuth("foo", "bar")
 
 	ravelry := ravelry.New(api, auth)
@@ -17,7 +19,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewAPI(t *testing.T) {
-	api := ravelry.NewAPI(&fakeAuth{}, "")
+	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
 	require.NotNil(t, api)
 }
 
