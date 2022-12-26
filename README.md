@@ -17,21 +17,24 @@ import (
 )
 
 func main() {
-    api := ravelry.NewAPI(auth, "")
+	// 1. setup the auth layer
+	auth, err := ravelry.NewAuthFromEnv()
+	if err != nil {
+		panic(err)
+	}
 
-    // you can also use ravelry.NewAuth to directly pass the credentials
-    auth, err := ravelry.NewAuthFromEnv()
-    if err != nil {
-        panic(err)
-    }
+	// 2. setup the network layer
+	api := ravelry.NewAPI(auth, "")
 
-    ravelry := ravelry.New(api, auth)
+	// 3. create the API wrapper
+	ravelry := ravelry.New(api, auth)
 
-    res, err := ravelry.ColorFamilies()
-    if err != nil {
-        panic(err)
-    }
+	// 4. profit
+	colors, err := ravelry.ColorFamilies()
+	if err != nil {
+		panic(err)
+	}
 
-    fmt.Printf("%v\n", res)
+	fmt.Printf("%v\n", colors)
 }
 ```
