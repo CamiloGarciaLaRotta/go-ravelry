@@ -1,3 +1,8 @@
+// This package provides the constructors needed to setup the [Ravelry API] client.
+// It allows instantiation of the network layer (api) and the authentication layer (auth).
+// Both of which are required for the client to be spun up.
+//
+// [Ravelry API]: https://www.ravelry.com/api
 package ravelry
 
 import (
