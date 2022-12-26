@@ -25,7 +25,7 @@ func TestGet_ServerError(t *testing.T) {
 	defer ts.Close()
 
 	api := New(&fakeAuth{}, ts.URL)
-	res, err := api.Get("foo")
+	res, err := api.Get("foo", nil)
 	require.Error(t, err)
 	require.Empty(t, res)
 }
@@ -37,8 +37,20 @@ func TestGet(t *testing.T) {
 	defer ts.Close()
 
 	api := New(&fakeAuth{}, ts.URL)
-	res, err := api.Get("foo")
+	res, err := api.Get("foo", nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, res)
 	require.Equal(t, []byte("Hello, client"), res)
+}
+
+func TestGet_Params(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		q := r.URL.Query()
+		require.Equal(t, "bar", q.Get("foo"))
+	}))
+	defer ts.Close()
+
+	api := New(&fakeAuth{}, ts.URL)
+	_, err := api.Get("foo", map[string]string{"foo": "bar"})
+	require.NoError(t, err)
 }
