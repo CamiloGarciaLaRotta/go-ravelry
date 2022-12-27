@@ -13,16 +13,20 @@ import (
 )
 
 const (
-	// Username env var
-	USER_ENV = "RAVELRY_USER"
-	// Password env var
-	PWD_ENV = "RAVELRY_PWD"
+	// Username env var.
+	UserENV = "RAVELRY_USER"
+	// Password env var.
+	KeyENV = "RAVELRY_PWD"
+)
+
+var (
+	errNoUser = errors.New("$RAVELRY_USER is not defined")
+	errNoKey  = errors.New("$RAVELRY_PWD is not defined")
 )
 
 // Auth defines all the means by which a user can authenticate with the Ravelry API.
 // Defining the interface allows us to mock the network layer in tests.
 type Auth interface {
-
 	// set the headers required to auth with the API
 	SetAuth(req *http.Request)
 }
@@ -34,12 +38,12 @@ type BasicAuth struct {
 	user, pass string
 }
 
-// SetAuth injects the headers required for basic auth
+// SetAuth injects the headers required for basic auth.
 func (auth *BasicAuth) SetAuth(req *http.Request) {
 	req.SetBasicAuth(auth.user, auth.pass)
 }
 
-// NewBasicAuth takes directly the user and password
+// NewBasicAuth takes directly the user and password.
 func NewBasicAuth(u, p string) *BasicAuth {
 	return &BasicAuth{user: u, pass: p}
 }
@@ -48,14 +52,15 @@ func NewBasicAuth(u, p string) *BasicAuth {
 //   - user: $RAVELRY_USER.
 //   - pass: $RAVELRY_PWD.
 func NewBasicAuthFromEnv() (*BasicAuth, error) {
-	u := os.Getenv(USER_ENV)
-	if u == "" {
-		return nil, errors.New("$RAVELRY_USER is not defined")
-	}
-	p := os.Getenv(PWD_ENV)
-	if p == "" {
-		return nil, errors.New("$RAVELRY_PWD is not defined")
+	user := os.Getenv(UserENV)
+	if user == "" {
+		return nil, errNoUser
 	}
 
-	return &BasicAuth{user: u, pass: p}, nil
+	p := os.Getenv(KeyENV)
+	if p == "" {
+		return nil, errNoKey
+	}
+
+	return &BasicAuth{user: user, pass: p}, nil
 }

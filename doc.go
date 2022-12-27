@@ -12,4 +12,4 @@
 // [Ravelry API]: https://www.ravelry.com/api
 // [an issue]: https://github.com/CamiloGarciaLaRotta/go-ravelry/issues
 // [a discussion]: https://github.com/CamiloGarciaLaRotta/go-ravelry/discussions
-package go_ravelry
+package goravelry

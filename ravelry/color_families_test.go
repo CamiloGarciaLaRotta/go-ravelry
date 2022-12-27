@@ -11,11 +11,13 @@ import (
 )
 
 func TestColorFamilies_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.ColorFamilies()
@@ -24,12 +26,14 @@ func TestColorFamilies_NetworkError(t *testing.T) {
 }
 
 func TestColorFamilies_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.ColorFamilies()
@@ -38,8 +42,10 @@ func TestColorFamilies_UnmarshalError(t *testing.T) {
 }
 
 func TestColorFamilies(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"color_families": [
 				{
@@ -59,7 +65,7 @@ func TestColorFamilies(t *testing.T) {
 			]
 		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.ColorFamilies()
 	require.NoError(t, err)

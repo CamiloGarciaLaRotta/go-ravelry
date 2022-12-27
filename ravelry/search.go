@@ -2,7 +2,6 @@ package ravelry
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -11,15 +10,17 @@ import (
 
 func (client *Client) Search(query string, limit int, types []string) ([]model.SearchObject, error) {
 	if strings.TrimSpace(query) == "" {
-		return nil, errors.New("search query can't be empty")
+		return nil, model.ErrEmptyQuery
 	}
 
 	if limit < 0 {
-		return nil, errors.New("search limit can't be negative")
+		return nil, model.ErrNegativeLimit
 	}
+
 	if limit > model.SearchLimitMax {
-		return nil, fmt.Errorf("search limit max is %d, got %d", model.SearchLimitMax, limit)
+		return nil, model.ErrAboveLimitMax
 	}
+
 	if limit == 0 {
 		limit = model.SearchLimitDefault
 	}
@@ -33,7 +34,7 @@ func (client *Client) Search(query string, limit int, types []string) ([]model.S
 		queryParams[model.SearchQueryParamType] = strings.Join(types, " ")
 	}
 
-	data, err := client.Api.Get("search.json", queryParams)
+	data, err := client.API.Get("search.json", queryParams)
 	if err != nil {
 		return nil, fmt.Errorf("failed to search: %w", err)
 	}
@@ -44,6 +45,7 @@ func (client *Client) Search(query string, limit int, types []string) ([]model.S
 
 	var res searchResponse
 	err = json.Unmarshal(data, &res)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal search response: %w", err)
 	}
@@ -52,7 +54,7 @@ func (client *Client) Search(query string, limit int, types []string) ([]model.S
 }
 
 func (client *Client) SavedSearches() ([]model.SavedSearch, error) {
-	data, err := client.Api.Get("saved_searches/list.json", nil)
+	data, err := client.API.Get("saved_searches/list.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get saved searches: %w", err)
 	}
@@ -62,6 +64,7 @@ func (client *Client) SavedSearches() ([]model.SavedSearch, error) {
 	}
 
 	var res searchResponse
+
 	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal saved searches response: %w", err)

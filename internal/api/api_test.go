@@ -14,13 +14,17 @@ type fakeAuth struct{}
 func (auth *fakeAuth) SetAuth(_ *http.Request) {}
 
 func TestRaverlyDomain(t *testing.T) {
+	t.Parallel()
+
 	api := New(&fakeAuth{}, "")
 	require.Equal(t, "https://api.ravelry.com", api.domain)
 }
 
 func TestGet_ServerError(t *testing.T) {
+	t.Parallel()
+
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 	}))
 	defer ts.Close()
 
@@ -31,6 +35,8 @@ func TestGet_ServerError(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
+	t.Parallel()
+
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello, client")
 	}))
@@ -44,13 +50,15 @@ func TestGet(t *testing.T) {
 }
 
 func TestGet_Params(t *testing.T) {
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		require.Equal(t, "bar", q.Get("foo"))
 	}))
-	defer ts.Close()
+	defer server.Close()
 
-	api := New(&fakeAuth{}, ts.URL)
+	api := New(&fakeAuth{}, server.URL)
 	_, err := api.Get("foo", map[string]string{"foo": "bar"})
 	require.NoError(t, err)
 }

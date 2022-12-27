@@ -11,11 +11,13 @@ import (
 )
 
 func TestYarnCompanies_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnCompanies("foo", 0, 0)
@@ -24,12 +26,14 @@ func TestYarnCompanies_NetworkError(t *testing.T) {
 }
 
 func TestYarnCompanies_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnCompanies("foo", 0, 0)
@@ -38,10 +42,11 @@ func TestYarnCompanies_UnmarshalError(t *testing.T) {
 }
 
 func TestYarnCompanies(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
-		FakeResp: []byte(`{
-			"yarn_companies": [
+	fakeAPI := testingsupport.FakeAPI{
+		FakeResp: []byte(`{"yarn_companies": [
 				{
 					"id": 3403,
 					"name": "Puppy",
@@ -64,9 +69,9 @@ func TestYarnCompanies(t *testing.T) {
 				"results": 2,
 				"last_page": 1
 			}
-		  }`),
+		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.YarnCompanies("foo", 1, 2)
 	require.NoError(t, err)
@@ -98,6 +103,5 @@ func TestYarnCompanies(t *testing.T) {
 		Results:   2,
 		LastPage:  1,
 	}
-
 	require.Equal(t, res.Paginator, paginator)
 }

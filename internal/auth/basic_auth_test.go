@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"context"
 	"net/http"
 	"testing"
 
@@ -9,48 +10,52 @@ import (
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 )
 
+//nolint:paralleltest
 func TestNewBasicAuthFromEnv_Errors(t *testing.T) {
-	t.Setenv(auth.USER_ENV, "")
-	t.Setenv(auth.PWD_ENV, "")
+	t.Setenv(auth.UserENV, "")
+	t.Setenv(auth.KeyENV, "")
 
-	a, err := auth.NewBasicAuthFromEnv()
+	someAuth, err := auth.NewBasicAuthFromEnv()
 	require.Error(t, err)
-	require.Nil(t, a)
+	require.Nil(t, someAuth)
 
-	t.Setenv(auth.USER_ENV, "foo")
+	t.Setenv(auth.UserENV, "foo")
 
-	a, err = auth.NewBasicAuthFromEnv()
+	someAuth, err = auth.NewBasicAuthFromEnv()
 	require.Error(t, err)
-	require.Nil(t, a)
+	require.Nil(t, someAuth)
 }
 
+//nolint:paralleltest
 func TestNewBasicAuthFromEnv(t *testing.T) {
-	t.Setenv(auth.USER_ENV, "foo")
-	t.Setenv(auth.PWD_ENV, "bar")
+	t.Setenv(auth.UserENV, "foo")
+	t.Setenv(auth.KeyENV, "bar")
 
-	r, err := http.NewRequest(http.MethodGet, "/", nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "/", nil)
 	require.NoError(t, err)
 
 	a, err := auth.NewBasicAuthFromEnv()
 	require.NoError(t, err)
 
-	a.SetAuth(r)
+	a.SetAuth(req)
 
-	u, p, ok := r.BasicAuth()
+	u, p, ok := req.BasicAuth()
 	require.True(t, ok)
 	require.Equal(t, "foo", u)
 	require.Equal(t, "bar", p)
 }
 
 func TestNewBasicAuth(t *testing.T) {
-	r, err := http.NewRequest(http.MethodGet, "/", nil)
+	t.Parallel()
+
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, "/", nil)
 	require.NoError(t, err)
 
 	a := auth.NewBasicAuth("foo", "bar")
 
-	a.SetAuth(r)
+	a.SetAuth(req)
 
-	u, p, ok := r.BasicAuth()
+	u, p, ok := req.BasicAuth()
 	require.True(t, ok)
 	require.Equal(t, "foo", u)
 	require.Equal(t, "bar", p)

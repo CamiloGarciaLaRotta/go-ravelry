@@ -6,6 +6,8 @@
 package ravelry
 
 import (
+	"fmt"
+
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/api"
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 )
@@ -13,14 +15,14 @@ import (
 // Client is the means by which users can interact with the Ravelry API.
 // It takes in a transport layer (Api) and an authenticating layer (Auth).
 type Client struct {
-	Api  api.API
+	API  api.API
 	Auth auth.Auth
 }
 
 // New App that will communicate with the Ravelry API.
 func New(api api.API, auth auth.Auth) *Client {
 	return &Client{
-		Api:  api,
+		API:  api,
 		Auth: auth,
 	}
 }
@@ -28,7 +30,7 @@ func New(api api.API, auth auth.Auth) *Client {
 // NewAPI creates the network layer for the Ravelry client.
 // It will authenticate to either the default Ravelry API or to an optional alternative domain.
 // This alternative domain is useful for tests and local development.
-func NewAPI(a auth.Auth, alternativeDomain string) *api.Api {
+func NewAPI(a auth.Auth, alternativeDomain string) *api.DefaultAPI {
 	return api.New(a, alternativeDomain)
 }
 
@@ -43,5 +45,10 @@ func NewBasicAuth(u, p string) *auth.BasicAuth {
 //   - user: $RAVELRY_USER.
 //   - pass: $RAVELRY_PWD.
 func NewBasicAuthFromEnv() (*auth.BasicAuth, error) {
-	return auth.NewBasicAuthFromEnv()
+	a, err := auth.NewBasicAuthFromEnv()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create auth layer: %w", err)
+	}
+
+	return a, nil
 }
