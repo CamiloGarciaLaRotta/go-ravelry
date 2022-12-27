@@ -92,6 +92,6 @@ Contributions welcome!
 | topics                 | ❌     |
 | upload                 | ❌     |
 | volumes                | ❌     |
-| yarn_attributes        | ❌     |
+| yarn_attributes        | ✅     |
 | yarn_companies         | ✅     |
 | yarns                  | ❌     |
