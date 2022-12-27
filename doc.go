@@ -5,7 +5,7 @@
 // The project has the following structure:
 //
 //	.
-//	├── internal		// components required by the project but not intended for external use (api, auth, testing)
+//	├── internal	// components required by the project but not intended for external use (api, auth, testing)
 //	├── pkg			// components required by the project and available for external use (models)
 //	└── ravelry		// the API wrapper itself
 //
