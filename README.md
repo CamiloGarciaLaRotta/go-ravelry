@@ -85,7 +85,7 @@ Contributions welcome!
 | products               | ❌     |
 | projects               | ❌     |
 | queue                  | ❌     |
-| saved_searches         | ❌     |
+| saved_searches         | ✅     |
 | shops                  | ❌     |
 | stash                  | ❌     |
 | stores                 | ❌     |
