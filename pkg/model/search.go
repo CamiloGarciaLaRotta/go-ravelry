@@ -64,3 +64,18 @@ type SearchRecord struct {
 	Permalink string `json:"permalink"`
 	URI       string `json:"uri"`
 }
+
+// SavedSearch model as defined in
+// https://www.ravelry.com/api#SavedSearch_list_result
+type SavedSearch struct {
+	ID                    int               `json:"id"`
+	Subscribed            bool              `json:"subscribed"`
+	Title                 string            `json:"title"`
+	SearchPath            string            `json:"search_path"`
+	SearchType            string            `json:"search_type"`
+	LastLoaded            string            `json:"last_loaded"`
+	SubscriptionUpdatedAt string            `json:"subscription_updated_at"`
+	CreatedAt             string            `json:"created_at"`
+	UpdatedAt             string            `json:"updated_at"`
+	SearchParams          map[string]string `json:"search_parameters"`
+}

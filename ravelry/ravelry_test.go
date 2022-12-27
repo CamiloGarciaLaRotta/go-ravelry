@@ -102,3 +102,16 @@ func TestYarnAttributesEndpoint(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, attrs)
 }
+
+func TestSavedSearchesEndpoint(t *testing.T) {
+	// we expect the ENV vars to be present in localhost and CI
+	auth, err := ravelry.NewBasicAuthFromEnv()
+	require.NoError(t, err)
+
+	api := ravelry.NewAPI(auth, "")
+	ravelry := ravelry.New(api, auth)
+
+	searches, err := ravelry.SavedSearches()
+	require.NoError(t, err)
+	require.NotEmpty(t, searches)
+}

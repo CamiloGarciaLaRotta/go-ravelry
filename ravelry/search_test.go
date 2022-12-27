@@ -127,3 +127,103 @@ func TestSearch(t *testing.T) {
 	require.Equal(t, res[0], foo)
 	require.Equal(t, res[1], bar)
 }
+
+func TestSavedSearches_NetworkError(t *testing.T) {
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
+		Fail: true,
+	}
+	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+
+	// bubbles up the error
+	res, err := ravelry.SavedSearches()
+	require.Error(t, err)
+	require.Empty(t, res)
+}
+
+func TestSavedSearches_UnmarshalError(t *testing.T) {
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
+		// we return an unexpected empty response
+		FakeResp: []byte(""),
+	}
+	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+
+	// bubbles up the error
+	res, err := ravelry.SavedSearches()
+	require.Error(t, err)
+	require.Empty(t, res)
+}
+
+func TestSavedSearches(t *testing.T) {
+	fakeAuth := testingsupport.FakeAuth{}
+	fakeApi := testingsupport.FakeApi{
+		FakeResp: []byte(`{
+			"saved_searches": [
+				{
+					"created_at": "foo",
+					"id": 938236,
+					"last_loaded": "foo",
+					"search_type": "patterns",
+					"subscribed": false,
+					"updated_at": "foo",
+					"title": "crochet",
+					"subscription_updated_at": null,
+					"search_path": "/patterns/search.json",
+					"search_parameters": {
+						"foo": "bar"
+					}
+				},
+				{
+					"created_at": "bar",
+					"id": 938238,
+					"last_loaded": "bar",
+					"search_type": "patterns",
+					"subscribed": true,
+					"updated_at": "bar",
+					"title": "amigurumi",
+					"subscription_updated_at": null,
+					"search_path": "/patterns/search.json",
+					"search_parameters": {
+						"bar": "baz"
+					}
+				}
+			]
+		}`),
+	}
+	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+
+	res, err := ravelry.SavedSearches()
+	require.NoError(t, err)
+	require.NotEmpty(t, res)
+	require.Len(t, res, 2)
+
+	foo := model.SavedSearch{
+		CreatedAt:  "foo",
+		ID:         938236,
+		LastLoaded: "foo",
+		SearchType: "patterns",
+		UpdatedAt:  "foo",
+		Title:      "crochet",
+		SearchPath: "/patterns/search.json",
+		SearchParams: map[string]string{
+			"foo": "bar",
+		},
+	}
+	bar := model.SavedSearch{
+		CreatedAt:  "bar",
+		ID:         938238,
+		Subscribed: true,
+		LastLoaded: "bar",
+		SearchType: "patterns",
+		UpdatedAt:  "bar",
+		Title:      "amigurumi",
+		SearchPath: "/patterns/search.json",
+		SearchParams: map[string]string{
+			"bar": "baz",
+		},
+	}
+
+	require.Equal(t, res[0], foo)
+	require.Equal(t, res[1], bar)
+}
