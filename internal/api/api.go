@@ -13,9 +13,12 @@ import (
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 )
 
-const RavelryDomain = "https://api.ravelry.com"
-
-const RequestTimeout = 5 * time.Second
+const (
+	// API domain.
+	RavelryDomain = "https://api.ravelry.com"
+	// Timeout for all network requests.
+	RequestTimeout = 5 * time.Second
+)
 
 var ErrHTTPStatus = fmt.Errorf("got non %d status", http.StatusOK)
 
