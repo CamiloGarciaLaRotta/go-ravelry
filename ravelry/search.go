@@ -50,3 +50,22 @@ func (client *Client) Search(query string, limit int, types []string) ([]model.S
 
 	return res.Results, nil
 }
+
+func (client *Client) SavedSearches() ([]model.SavedSearch, error) {
+	data, err := client.Api.Get("saved_searches/list.json", nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get saved searches: %w", err)
+	}
+
+	type searchResponse struct {
+		Searches []model.SavedSearch `json:"saved_searches"`
+	}
+
+	var res searchResponse
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal saved searches response: %w", err)
+	}
+
+	return res.Searches, nil
+}
