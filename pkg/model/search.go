@@ -36,10 +36,13 @@ const (
 	SearchLimitMax     = 500
 )
 
+// URL parameters used in different search endpoints
 const (
-	SearchQueryParamQuery = "query"
-	SearchQueryParamLimit = "limit"
-	SearchQueryParamType  = "type"
+	SearchQueryParamQuery    = "query"
+	SearchQueryParamLimit    = "limit"
+	SearchQueryParamType     = "type"
+	SearchQueryParamPage     = "page"
+	SearchQueryParamPageSize = "page_size"
 )
 
 // SearchObject model as defined in
