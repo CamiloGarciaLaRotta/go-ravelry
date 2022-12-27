@@ -11,11 +11,13 @@ import (
 )
 
 func TestCurrentUser_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.CurrentUser()
@@ -24,12 +26,14 @@ func TestCurrentUser_NetworkError(t *testing.T) {
 }
 
 func TestCurrentUser_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.CurrentUser()
@@ -38,8 +42,10 @@ func TestCurrentUser_UnmarshalError(t *testing.T) {
 }
 
 func TestCurrentUser(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"user": {
 				"id": 123,
@@ -51,9 +57,9 @@ func TestCurrentUser(t *testing.T) {
 			}
 		  }`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
-	u := model.User{
+	user := model.User{
 		ID:       123,
 		Username: "cegal",
 	}
@@ -61,5 +67,5 @@ func TestCurrentUser(t *testing.T) {
 	res, err := ravelry.CurrentUser()
 	require.NoError(t, err)
 	require.NotNil(t, res)
-	require.Equal(t, &u, res)
+	require.Equal(t, &user, res)
 }

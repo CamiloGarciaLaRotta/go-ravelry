@@ -11,11 +11,13 @@ import (
 )
 
 func TestYarnAttributes_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnAttributes()
@@ -24,12 +26,14 @@ func TestYarnAttributes_NetworkError(t *testing.T) {
 }
 
 func TestYarnAttributes_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnAttributes()
@@ -38,8 +42,10 @@ func TestYarnAttributes_UnmarshalError(t *testing.T) {
 }
 
 func TestYarnAttributes(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"yarn_attribute_groups": [
 				{
@@ -87,7 +93,7 @@ func TestYarnAttributes(t *testing.T) {
 			]
 		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.YarnAttributes()
 	require.NoError(t, err)

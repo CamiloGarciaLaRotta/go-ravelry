@@ -12,6 +12,8 @@ import (
 )
 
 func TestNew(t *testing.T) {
+	t.Parallel()
+
 	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
 	auth := ravelry.NewBasicAuth("foo", "bar")
 
@@ -20,18 +22,23 @@ func TestNew(t *testing.T) {
 }
 
 func TestNewAPI(t *testing.T) {
+	t.Parallel()
+
 	api := ravelry.NewAPI(&testingsupport.FakeAuth{}, "")
 	require.NotNil(t, api)
 }
 
 func TestNewBasicAuth(t *testing.T) {
+	t.Parallel()
+
 	a := ravelry.NewBasicAuth("foo", "bar")
 	require.NotNil(t, a)
 }
 
+//nolint:paralleltest
 func TestNewBasicAuthFromEnv(t *testing.T) {
-	t.Setenv(auth.USER_ENV, "foo")
-	t.Setenv(auth.PWD_ENV, "bar")
+	t.Setenv(auth.UserENV, "foo")
+	t.Setenv(auth.KeyENV, "bar")
 
 	a, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -39,6 +46,8 @@ func TestNewBasicAuthFromEnv(t *testing.T) {
 }
 
 func TestReadOnlyEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -52,6 +61,8 @@ func TestReadOnlyEndpoint(t *testing.T) {
 }
 
 func TestPersonalEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -65,6 +76,8 @@ func TestPersonalEndpoint(t *testing.T) {
 }
 
 func TestURLParamEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -78,6 +91,8 @@ func TestURLParamEndpoint(t *testing.T) {
 }
 
 func TestYarnCompaniesEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -91,6 +106,8 @@ func TestYarnCompaniesEndpoint(t *testing.T) {
 }
 
 func TestYarnAttributesEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)
@@ -104,6 +121,8 @@ func TestYarnAttributesEndpoint(t *testing.T) {
 }
 
 func TestSavedSearchesEndpoint(t *testing.T) {
+	t.Parallel()
+
 	// we expect the ENV vars to be present in localhost and CI
 	auth, err := ravelry.NewBasicAuthFromEnv()
 	require.NoError(t, err)

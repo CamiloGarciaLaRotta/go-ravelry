@@ -11,9 +11,11 @@ import (
 )
 
 func TestSearch_Errors(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	fakeAPI := testingsupport.FakeAPI{}
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// empty query
 	res, err := ravelry.Search("", 0, nil)
@@ -32,11 +34,13 @@ func TestSearch_Errors(t *testing.T) {
 }
 
 func TestSearch_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.Search("foo", 0, nil)
@@ -45,12 +49,14 @@ func TestSearch_NetworkError(t *testing.T) {
 }
 
 func TestSearch_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.Search("foo", 0, nil)
@@ -59,8 +65,10 @@ func TestSearch_UnmarshalError(t *testing.T) {
 }
 
 func TestSearch(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"results": [
 				{
@@ -92,7 +100,7 @@ func TestSearch(t *testing.T) {
 			]
 		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.Search("foo", 10, []string{model.SearchTypeShop, model.SearchTypePattern})
 	require.NoError(t, err)
@@ -129,11 +137,13 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSavedSearches_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.SavedSearches()
@@ -142,12 +152,14 @@ func TestSavedSearches_NetworkError(t *testing.T) {
 }
 
 func TestSavedSearches_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.SavedSearches()
@@ -156,8 +168,10 @@ func TestSavedSearches_UnmarshalError(t *testing.T) {
 }
 
 func TestSavedSearches(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"saved_searches": [
 				{
@@ -191,7 +205,7 @@ func TestSavedSearches(t *testing.T) {
 			]
 		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.SavedSearches()
 	require.NoError(t, err)
