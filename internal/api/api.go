@@ -3,14 +3,24 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
+	"time"
 
 	"github.com/CamiloGarciaLaRotta/go-ravelry/internal/auth"
 )
 
-const RAVELRY_DOMAIN = "https://api.ravelry.com"
+const (
+	// API domain.
+	RavelryDomain = "https://api.ravelry.com"
+	// Timeout for all network requests.
+	RequestTimeout = 5 * time.Second
+)
+
+var ErrHTTPStatus = fmt.Errorf("got non %d status", http.StatusOK)
 
 // API defines all the HTTP methods needed to interact with the Ravelry API.
 // Defining the interface allows us to mock the network layer in tests.
@@ -18,27 +28,38 @@ type API interface {
 	Get(url string, params map[string]string) ([]byte, error)
 }
 
-type Api struct {
+// DefaultAPI uses the default http.Client to perform HTTP requests to the Ravelry API.
+type DefaultAPI struct {
 	auth   auth.Auth
 	domain string
 }
 
 // New Api which will authenticate to either the default Ravelry API or to an optional alternative domain.
 // This alternative domain is useful for tests and local development.
-func New(a auth.Auth, alternativeDomain string) *Api {
-	var d string
+func New(someAuth auth.Auth, alternativeDomain string) *DefaultAPI {
+	var domain string
 	if alternativeDomain != "" {
-		d = alternativeDomain
+		domain = alternativeDomain
 	} else {
-		d = RAVELRY_DOMAIN
+		domain = RavelryDomain
 	}
-	return &Api{auth: a, domain: d}
+
+	api := DefaultAPI{
+		auth:   someAuth,
+		domain: domain,
+	}
+
+	return &api
 }
 
 // Get performs a GET request with a default HTTP client and returns the response body.
-func (api *Api) Get(endpoint string, params map[string]string) ([]byte, error) {
+func (api *DefaultAPI) Get(endpoint string, params map[string]string) ([]byte, error) {
 	url := fmt.Sprintf("%s/%s", api.domain, endpoint)
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+
+	ctx, cancel := context.WithTimeout(context.Background(), RequestTimeout)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create GET request: %w", err)
 	}
@@ -48,14 +69,26 @@ func (api *Api) Get(endpoint string, params map[string]string) ([]byte, error) {
 	api.auth.SetAuth(req)
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
+	netTransport := &http.Transport{
+		Dial: (&net.Dialer{
+			Timeout: RequestTimeout,
+		}).Dial,
+		TLSHandshakeTimeout: RequestTimeout,
 	}
 
+	client := &http.Client{
+		Timeout:   RequestTimeout,
+		Transport: netTransport,
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("client failed to do request: %w", err)
+	}
+	defer res.Body.Close()
+
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("GET %s got HTTP status %d", endpoint, res.StatusCode)
+		return nil, ErrHTTPStatus
 	}
 
 	data, err := io.ReadAll(res.Body)
@@ -66,12 +99,12 @@ func (api *Api) Get(endpoint string, params map[string]string) ([]byte, error) {
 	return data, nil
 }
 
-func addQueryParams(r *http.Request, params map[string]string) {
-	q := r.URL.Query()
+func addQueryParams(req *http.Request, params map[string]string) {
+	query := req.URL.Query()
 
 	for k, v := range params {
-		q.Add(k, v)
+		query.Add(k, v)
 	}
 
-	r.URL.RawQuery = q.Encode()
+	req.URL.RawQuery = query.Encode()
 }

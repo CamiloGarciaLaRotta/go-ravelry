@@ -8,7 +8,7 @@ import (
 )
 
 func (client *Client) ColorFamilies() ([]model.ColorFamily, error) {
-	data, err := client.Api.Get("color_families.json", nil)
+	data, err := client.API.Get("color_families.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get color families: %w", err)
 	}
@@ -18,6 +18,7 @@ func (client *Client) ColorFamilies() ([]model.ColorFamily, error) {
 	}
 
 	var res colorFamilyResponse
+
 	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal color families: %w", err)

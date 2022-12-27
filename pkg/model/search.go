@@ -1,16 +1,15 @@
 package model
 
-// title	Title of the object
-// type_name	Type of object, suitable for displaying to end users
-// caption	(optional) Caption/description related to object, suitable for displaying to end users
-// tiny_image_url	(optional) Image suitable for displaying inline with text. Typically 24x24.
-// image_url	(optional) Primary image associated with the object. Typically 500px on the longest side.
-// record	Nested object with information about the matching record
-// Key	Description
-// type	Type of record, corresponds with API Result Types
-// id	id of record
-// permalink	current permalink for record
-// uri	API URI for retrieving information about the record
+import (
+	"errors"
+	"fmt"
+)
+
+var (
+	ErrEmptyQuery    = errors.New("search query can't be empty")
+	ErrNegativeLimit = errors.New("search limit can't be negative")
+	ErrAboveLimitMax = fmt.Errorf("search limit is above max %d", SearchLimitMax)
+)
 
 // Search Type filters as defined in
 // https://www.ravelry.com/api#/_search
@@ -36,7 +35,7 @@ const (
 	SearchLimitMax     = 500
 )
 
-// URL parameters used in different search endpoints
+// URL parameters used in different search endpoints.
 const (
 	SearchQueryParamQuery    = "query"
 	SearchQueryParamLimit    = "limit"

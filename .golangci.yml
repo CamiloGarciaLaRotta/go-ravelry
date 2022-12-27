@@ -1,0 +1,10 @@
+linters:
+  enable-all: true
+  
+  disable:
+    - gci
+    - funlen
+    - testpackage
+    - exhaustruct
+    - exhaustivestruct
+    - tagliatelle

@@ -8,7 +8,7 @@ import (
 )
 
 func (client *Client) YarnWeights() ([]model.YarnWeight, error) {
-	data, err := client.Api.Get("yarn_weights.json", nil)
+	data, err := client.API.Get("yarn_weights.json", nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get yarn weights: %w", err)
 	}
@@ -18,6 +18,7 @@ func (client *Client) YarnWeights() ([]model.YarnWeight, error) {
 	}
 
 	var res yarnWeightResponse
+
 	err = json.Unmarshal(data, &res)
 	if err != nil {
 		return nil, fmt.Errorf("failed to unmarshal yarn weights: %w", err)

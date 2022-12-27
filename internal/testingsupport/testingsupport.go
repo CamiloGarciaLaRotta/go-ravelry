@@ -12,18 +12,21 @@ type FakeAuth struct{}
 // SetAuth is a mock implementation for tests.
 func (auth *FakeAuth) SetAuth(_ *http.Request) {}
 
-// FakeApi is a test mock for the api.API interface.
-type FakeApi struct {
+// FakeAPI is a test mock for the api.API interface.
+type FakeAPI struct {
 	// whether the call to the API layer should fail or not
 	Fail bool
 	// the stubbed out server response
 	FakeResp []byte
 }
 
+var errDummy = errors.New("booom")
+
 // Get is a mock implementation for tests.
-func (api *FakeApi) Get(url string, params map[string]string) ([]byte, error) {
+func (api *FakeAPI) Get(url string, params map[string]string) ([]byte, error) {
 	if api.Fail {
-		return nil, errors.New("booom")
+		return nil, errDummy
 	}
+
 	return api.FakeResp, nil
 }

@@ -11,11 +11,13 @@ import (
 )
 
 func TestYarnWeights_NetworkError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		Fail: true,
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnWeights()
@@ -24,12 +26,14 @@ func TestYarnWeights_NetworkError(t *testing.T) {
 }
 
 func TestYarnWeights_UnmarshalError(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		// we return an unexpected empty response
 		FakeResp: []byte(""),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	// bubbles up the error
 	res, err := ravelry.YarnWeights()
@@ -38,8 +42,10 @@ func TestYarnWeights_UnmarshalError(t *testing.T) {
 }
 
 func TestYarnWeights(t *testing.T) {
+	t.Parallel()
+
 	fakeAuth := testingsupport.FakeAuth{}
-	fakeApi := testingsupport.FakeApi{
+	fakeAPI := testingsupport.FakeAPI{
 		FakeResp: []byte(`{
 			"yarn_weights": [
 				{
@@ -65,7 +71,7 @@ func TestYarnWeights(t *testing.T) {
 			]
 		}`),
 	}
-	ravelry := ravelry.New(&fakeApi, &fakeAuth)
+	ravelry := ravelry.New(&fakeAPI, &fakeAuth)
 
 	res, err := ravelry.YarnWeights()
 	require.NoError(t, err)
