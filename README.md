@@ -79,7 +79,7 @@ Contributions welcome!
 | pattern_categories     | ❌     |
 | pattern_sources        | ❌     |
 | patterns               | ❌     |
-| people                 | ❌     |
+| people                 | ✅     |
 | photos                 | ❌     |
 | product_attachments    | ❌     |
 | products               | ❌     |
