@@ -3,6 +3,7 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -26,6 +27,7 @@ var errHTTPStatus = fmt.Errorf("got non %d status", http.StatusOK)
 // Defining the interface allows us to mock the network layer in tests.
 type API interface {
 	Get(url string, params map[string]string) ([]byte, error)
+	Post(url string, body []byte) ([]byte, error)
 }
 
 // DefaultAPI uses the default http.Client to perform HTTP requests to the Ravelry API.
@@ -69,17 +71,7 @@ func (api *DefaultAPI) Get(endpoint string, params map[string]string) ([]byte, e
 	api.auth.SetAuth(req)
 	req.Header.Set("Content-Type", "application/json")
 
-	netTransport := &http.Transport{
-		Dial: (&net.Dialer{
-			Timeout: RequestTimeout,
-		}).Dial,
-		TLSHandshakeTimeout: RequestTimeout,
-	}
-
-	client := &http.Client{
-		Timeout:   RequestTimeout,
-		Transport: netTransport,
-	}
+	client := clientWithTimeout()
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -97,6 +89,55 @@ func (api *DefaultAPI) Get(endpoint string, params map[string]string) ([]byte, e
 	}
 
 	return data, nil
+}
+
+// Post performs a POST request with a default HTTP client and returns the response body.
+func (api *DefaultAPI) Post(endpoint string, body []byte) ([]byte, error) {
+	url := fmt.Sprintf("%s/%s", api.domain, endpoint)
+
+	ctx, cancel := context.WithTimeout(context.Background(), RequestTimeout)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create POST request: %w", err)
+	}
+
+	api.auth.SetAuth(req)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := clientWithTimeout()
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("client failed to do request: %w", err)
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return nil, errHTTPStatus
+	}
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	return data, nil
+}
+
+func clientWithTimeout() *http.Client {
+	netTransport := &http.Transport{
+		Dial: (&net.Dialer{
+			Timeout: RequestTimeout,
+		}).Dial,
+		TLSHandshakeTimeout: RequestTimeout,
+	}
+
+	return &http.Client{
+		Timeout:   RequestTimeout,
+		Transport: netTransport,
+	}
 }
 
 func addQueryParams(req *http.Request, params map[string]string) {

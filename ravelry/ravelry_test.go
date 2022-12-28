@@ -1,6 +1,8 @@
 package ravelry_test
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -69,7 +71,7 @@ func TestReadOnlyEndpoint(t *testing.T) {
 	require.NotEmpty(t, colors)
 }
 
-func TestPersonalEndpoint(t *testing.T) {
+func TestUserEndpoints(t *testing.T) {
 	t.Parallel()
 
 	// we expect the ENV vars to be present in localhost and CI
@@ -79,9 +81,37 @@ func TestPersonalEndpoint(t *testing.T) {
 	api := ravelry.NewAPI(auth, "")
 	ravelry := ravelry.New(api, auth)
 
-	colors, err := ravelry.CurrentUser()
+	// get user through CurrentUser
+	currUser, err := ravelry.CurrentUser()
 	require.NoError(t, err)
-	require.NotEmpty(t, colors)
+	require.NotNil(t, currUser)
+
+	// get user through People endpoint by username
+	userByUsername, err := ravelry.User(currUser.Username)
+	require.NoError(t, err)
+	require.NotNil(t, userByUsername)
+
+	require.Equal(t, currUser.ID, userByUsername.ID)
+
+	// get user through People endpoint by username
+	userByID, err := ravelry.User(fmt.Sprintf("%d", currUser.ID))
+	require.NoError(t, err)
+	require.NotNil(t, userByID)
+
+	require.Equal(t, currUser.ID, userByID.ID)
+
+	// update user
+
+	// we have a counter in the about me section
+	currCount, err := strconv.Atoi(userByID.AboutMe)
+	require.NoError(t, err)
+
+	currUser.AboutMe = fmt.Sprintf("%d", currCount+1)
+	updatedUser, err := ravelry.UpdateUser(currUser)
+	require.NoError(t, err)
+	require.NotNil(t, updatedUser)
+
+	require.NotEqual(t, userByID.AboutMe, updatedUser.AboutMe)
 }
 
 func TestURLParamEndpoint(t *testing.T) {

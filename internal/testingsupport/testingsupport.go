@@ -30,3 +30,12 @@ func (api *FakeAPI) Get(url string, params map[string]string) ([]byte, error) {
 
 	return api.FakeResp, nil
 }
+
+// Post is a mock implementation for tests.
+func (api *FakeAPI) Post(url string, body []byte) ([]byte, error) {
+	if api.Fail {
+		return nil, errDummy
+	}
+
+	return api.FakeResp, nil
+}
