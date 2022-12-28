@@ -11,22 +11,6 @@ import (
 )
 
 //nolint:paralleltest
-func TestNewBasicAuthFromEnv_Errors(t *testing.T) {
-	t.Setenv(auth.UserENV, "")
-	t.Setenv(auth.KeyENV, "")
-
-	someAuth, err := auth.NewBasicAuthFromEnv()
-	require.Error(t, err)
-	require.Nil(t, someAuth)
-
-	t.Setenv(auth.UserENV, "foo")
-
-	someAuth, err = auth.NewBasicAuthFromEnv()
-	require.Error(t, err)
-	require.Nil(t, someAuth)
-}
-
-//nolint:paralleltest
 func TestNewBasicAuthFromEnv(t *testing.T) {
 	t.Setenv(auth.UserENV, "foo")
 	t.Setenv(auth.KeyENV, "bar")

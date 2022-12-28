@@ -20,7 +20,7 @@ const (
 	RequestTimeout = 5 * time.Second
 )
 
-var ErrHTTPStatus = fmt.Errorf("got non %d status", http.StatusOK)
+var errHTTPStatus = fmt.Errorf("got non %d status", http.StatusOK)
 
 // API defines all the HTTP methods needed to interact with the Ravelry API.
 // Defining the interface allows us to mock the network layer in tests.
@@ -88,7 +88,7 @@ func (api *DefaultAPI) Get(endpoint string, params map[string]string) ([]byte, e
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, ErrHTTPStatus
+		return nil, errHTTPStatus
 	}
 
 	data, err := io.ReadAll(res.Body)

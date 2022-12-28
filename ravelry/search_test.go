@@ -19,17 +19,17 @@ func TestSearch_Errors(t *testing.T) {
 
 	// empty query
 	res, err := ravelry.Search("", 0, nil)
-	require.Error(t, err)
+	require.ErrorIs(t, err, model.ErrEmptyQuery)
 	require.Empty(t, res)
 
 	// negative limit
 	res, err = ravelry.Search("foo", -1, nil)
-	require.Error(t, err)
+	require.ErrorIs(t, err, model.ErrNegativeLimit)
 	require.Empty(t, res)
 
 	// limit greater than max
 	res, err = ravelry.Search("foo", model.SearchLimitMax+1, nil)
-	require.Error(t, err)
+	require.ErrorIs(t, err, model.ErrAboveLimitMax)
 	require.Empty(t, res)
 }
 
