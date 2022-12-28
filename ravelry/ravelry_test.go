@@ -1,6 +1,7 @@
 package ravelry_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -79,9 +80,21 @@ func TestPersonalEndpoint(t *testing.T) {
 	api := ravelry.NewAPI(auth, "")
 	ravelry := ravelry.New(api, auth)
 
-	colors, err := ravelry.CurrentUser()
+	currUser, err := ravelry.CurrentUser()
 	require.NoError(t, err)
-	require.NotEmpty(t, colors)
+	require.NotNil(t, currUser)
+
+	userByUsername, err := ravelry.User(currUser.Username)
+	require.NoError(t, err)
+	require.NotNil(t, userByUsername)
+
+	require.Equal(t, currUser.ID, userByUsername.ID)
+
+	userByID, err := ravelry.User(fmt.Sprintf("%d", currUser.ID))
+	require.NoError(t, err)
+	require.NotNil(t, userByID)
+
+	require.Equal(t, currUser.ID, userByID.ID)
 }
 
 func TestURLParamEndpoint(t *testing.T) {
