@@ -1,5 +1,9 @@
 package model
 
+import "errors"
+
+var ErrNoUserID = errors.New("user ID can't be empty")
+
 // User model as defined in
 // https://www.ravelry.com/api#/_current_user
 type User struct {
