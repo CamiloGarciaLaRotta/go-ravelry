@@ -8,3 +8,12 @@ type FiberAttribute struct {
 	Name             string `json:"name"`
 	Permalink        string `json:"permalink"`
 }
+
+// FiberAttributeGroup as defined in
+// https://www.ravelry.com/api#FiberAttributeGroup__result
+type FiberAttributeGroup struct {
+	ID        int    `json:"id"`
+	ParentID  int    `json:"parent_id"`
+	Name      string `json:"name"`
+	Permalink string `json:"permalink"`
+}

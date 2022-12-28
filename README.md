@@ -62,7 +62,7 @@ Contributions welcome!
 | extras                 | ❌     |
 | favorites              | ❌     |
 | fiber                  | ❌     |
-| fiber_attribute_groups | ❌     |
+| fiber_attribute_groups | ✅     |
 | fiber_attributes       | ✅     |
 | fiber_categories       | ✅     |
 | forum_posts            | ❌     |
