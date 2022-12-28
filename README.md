@@ -64,7 +64,7 @@ Contributions welcome!
 | fiber                  | ❌     |
 | fiber_attribute_groups | ❌     |
 | fiber_attributes       | ✅     |
-| fiber_categories       | ❌     |
+| fiber_categories       | ✅     |
 | forum_posts            | ❌     |
 | forums                 | ❌     |
 | friends                | ❌     |
