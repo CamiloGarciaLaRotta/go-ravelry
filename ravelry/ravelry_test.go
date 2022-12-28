@@ -45,6 +45,15 @@ func TestNewBasicAuthFromEnv(t *testing.T) {
 	require.NotNil(t, a)
 }
 
+//nolint:paralleltest
+func TestNewBasicAuthFromEnv_Error(t *testing.T) {
+	t.Setenv(auth.UserENV, "")
+
+	a, err := ravelry.NewBasicAuthFromEnv()
+	require.Error(t, err)
+	require.Nil(t, a)
+}
+
 func TestReadOnlyEndpoint(t *testing.T) {
 	t.Parallel()
 

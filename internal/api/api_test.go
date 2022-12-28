@@ -30,7 +30,7 @@ func TestGet_ServerError(t *testing.T) {
 
 	api := New(&fakeAuth{}, ts.URL)
 	res, err := api.Get("foo", nil)
-	require.Error(t, err)
+	require.ErrorIs(t, err, errHTTPStatus)
 	require.Empty(t, res)
 }
 
