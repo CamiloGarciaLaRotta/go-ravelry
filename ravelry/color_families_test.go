@@ -1,3 +1,7 @@
+// unfortunate false positive, the test format is the same
+// but the func under test is different
+//
+//nolint:dupl
 package ravelry_test
 
 import (
