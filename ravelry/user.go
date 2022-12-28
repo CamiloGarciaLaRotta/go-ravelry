@@ -56,7 +56,7 @@ func (client *Client) User(id string) (*model.User, error) {
 // UpdateUser submits the input user to the server to be updated.
 // https://www.ravelry.com/api#people_update
 func (client *Client) UpdateUser(user *model.User) (*model.User, error) {
-	if user.ID == 0 {
+	if user == nil || user.ID == 0 {
 		return nil, model.ErrNoUserID
 	}
 
