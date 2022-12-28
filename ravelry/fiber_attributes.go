@@ -26,3 +26,23 @@ func (client *Client) FiberAttributes() ([]model.FiberAttribute, error) {
 
 	return res.FiberAttrs, nil
 }
+
+func (client *Client) FiberAttributeGroups() ([]model.FiberAttributeGroup, error) {
+	data, err := client.API.Get("fiber_attribute_groups.json", nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get fiber attribute categories: %w", err)
+	}
+
+	type fiberAttrGroupResponse struct {
+		Groups []model.FiberAttributeGroup `json:"fiber_attribute_groups"`
+	}
+
+	var res fiberAttrGroupResponse
+
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal fiber attribute categories: %w", err)
+	}
+
+	return res.Groups, nil
+}
